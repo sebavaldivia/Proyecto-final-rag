@@ -1,0 +1,106 @@
+{
+  "name": "03 - Registro de Errores",
+  "nodes": [
+    {
+      "parameters": {},
+      "id": "f587c091-7e88-4f3d-b65b-4154a4a26547",
+      "name": "Error Trigger",
+      "type": "n8n-nodes-base.errorTrigger",
+      "typeVersion": 1,
+      "position": [
+        0,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "mode": "runOnceForEachItem",
+        "jsCode": "return { json: { workflow: $json.workflow?.name ?? '', execution_id: $json.execution?.id ?? '', ultimo_nodo: $json.execution?.lastNodeExecuted ?? '', error: $json.execution?.error?.message ?? 'Error sin detalle', fecha: new Date().toISOString(), estado: 'Error para revisión' } };"
+      },
+      "id": "a09df785-1509-43c6-89a6-df712675ac0e",
+      "name": "Preparar log de error",
+      "type": "n8n-nodes-base.code",
+      "typeVersion": 2,
+      "position": [
+        240,
+        0
+      ]
+    },
+    {
+      "parameters": {
+        "operation": "append",
+        "documentId": {
+          "__rl": true,
+          "value": "1siL4ptV0uXQ",
+          "mode": "id"
+        },
+        "sheetName": {
+          "__rl": true,
+          "value": "Errores",
+          "mode": "name"
+        },
+        "columns": {
+          "mappingMode": "autoMapInputData",
+          "value": {},
+          "matchingColumns": [],
+          "schema": [],
+          "attemptToConvertTypes": false,
+          "convertFieldsToString": false
+        },
+        "options": {}
+      },
+      "id": "62038727-4c71-4784-a065-ab399bff4362",
+      "name": "Registrar error en Google Sheets",
+      "type": "n8n-nodes-base.googleSheets",
+      "typeVersion": 4.5,
+      "position": [
+        496,
+        0
+      ],
+      "credentials": {
+        "googleSheetsOAuth2Api": {
+          "id": "uiL9zcYEeanlO6AJ",
+          "name": "Google Sheets account"
+        }
+      }
+    }
+  ],
+  "pinData": {},
+  "connections": {
+    "Error Trigger": {
+      "main": [
+        [
+          {
+            "node": "Preparar log de error",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    },
+    "Preparar log de error": {
+      "main": [
+        [
+          {
+            "node": "Registrar error en Google Sheets",
+            "type": "main",
+            "index": 0
+          }
+        ]
+      ]
+    }
+  },
+  "active": false,
+  "settings": {
+    "executionOrder": "v1",
+    "binaryMode": "separate"
+  },
+  "versionId": "313129f9-c232-4dd6-84db-f057935a9f27",
+  "meta": {
+    "templateCredsSetupCompleted": true,
+    "instanceId": "eeefbbdd77e4d357336f8884854d7e1b7b9ad21239f180f0537ee7101758f6c4"
+  },
+  "nodeGroups": [],
+  "id": "I65XsReTTb1EwGMG",
+  "tags": []
+}
